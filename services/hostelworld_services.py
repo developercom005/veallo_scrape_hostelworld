@@ -45,12 +45,12 @@ def send_email(email_text,to):
 def prepare_driver(url):
 
     # Mac
-    options = Options()
-    options.add_argument('-headless')
-    opts = webdriver.ChromeOptions()
-    opts.headless = True
-    driver = webdriver.Chrome('/Users/chandansingh/Documents/travel/scrape/hostelworld_scrape/chromedriver', options=opts)
-    driver.get(url)
+    # options = Options()
+    # options.add_argument('-headless')
+    # opts = webdriver.ChromeOptions()
+    # opts.headless = True
+    # driver = webdriver.Chrome('/Users/chandansingh/Documents/travel/scrape/hostelworld_scrape/chromedriver', options=opts)
+    # driver.get(url)
 
     # Linux
     chrome_options = webdriver.ChromeOptions()

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1556b3f2-1c9c-4750-a057-e5a2f11d4581" name="Default Changelist" comment="" />
+    <list default="true" id="1556b3f2-1c9c-4750-a057-e5a2f11d4581" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/services/hostelworld_services.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/hostelworld_services.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,8 +15,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/services/hostelworld_services.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="463">
-              <caret line="62" lean-forward="true" selection-start-line="62" selection-end-line="62" />
+            <state relative-caret-position="340">
+              <caret line="47" selection-start-line="47" selection-end-line="53" />
               <folding>
                 <element signature="e#1#12#0" expanded="true" />
                 <element signature="e#882#1535#0" />
@@ -260,8 +262,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/services/hostelworld_services.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="463">
-          <caret line="62" lean-forward="true" selection-start-line="62" selection-end-line="62" />
+        <state relative-caret-position="340">
+          <caret line="47" selection-start-line="47" selection-end-line="53" />
           <folding>
             <element signature="e#1#12#0" expanded="true" />
             <element signature="e#882#1535#0" />
