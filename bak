@@ -1,0 +1,8 @@
+sudo docker run --name booking_scrape -v "$PWD":/code -w /code -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONUNBUFFERED=1 -td --restart=always joyzoursky/python-chromedriver:3.7 /bin/bash
+fitwuF-faqgij-zygsy6
+developer.com005@gmail.com
+nohup python3 main.py &
+
+mongoexport -h 127.0.0.1:27017 -d veallo -c accommodations -u chandan005 -p pumpkiN009! --authenticationDatabase admin --out acc.json
+
+mongoimport -h 127.0.0.1:27017 -d veallo -c accommodation -u chandan005 -p pumpkiN009! --authenticationDatabase admin --file acc.json
