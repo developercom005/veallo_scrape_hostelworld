@@ -15,8 +15,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/services/hostelworld_services.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="177">
-              <caret line="168" column="77" selection-start-line="168" selection-start-column="77" selection-end-line="168" selection-end-column="77" />
+            <state relative-caret-position="412">
+              <caret line="99" column="114" selection-start-line="99" selection-start-column="114" selection-end-line="99" selection-end-column="114" />
               <folding>
                 <element signature="e#1#12#0" expanded="true" />
                 <element signature="e#882#1535#0" />
@@ -126,8 +126,7 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="35" />
-    <option name="y" value="88" />
+    <option name="y" value="39" />
     <option name="width" value="1440" />
     <option name="height" value="788" />
   </component>
@@ -192,7 +191,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="35" y="88" width="1440" height="788" extended-state="0" />
+    <frame x="0" y="39" width="1440" height="788" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1952079" />
@@ -273,8 +272,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/services/hostelworld_services.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="168" column="77" selection-start-line="168" selection-start-column="77" selection-end-line="168" selection-end-column="77" />
+        <state relative-caret-position="412">
+          <caret line="99" column="114" selection-start-line="99" selection-start-column="114" selection-end-line="99" selection-end-column="114" />
           <folding>
             <element signature="e#1#12#0" expanded="true" />
             <element signature="e#882#1535#0" />

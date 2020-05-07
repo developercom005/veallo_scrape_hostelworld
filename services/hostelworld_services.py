@@ -97,7 +97,7 @@ def get_cities_from_url(driver,country):
     #     other_locations_set.add(ol.text)
 
 def construct_url(city,country,page):
-    url = "https://www.hostelworld.com/findabed.php/ChosenCity."+city+"/ChosenCountry."+country+"?page="+page
+    url = "https://www.hostelworld.com/findabed.php/ChosenCity."+city+"/ChosenCountry."+country+"?page="+str(page)
     return url
 
 def get_accommodations_list(driver,url,city, country):
