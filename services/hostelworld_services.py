@@ -44,7 +44,7 @@ def send_email(email_text,to):
 
 def prepare_driver(url):
 
-    # Mac
+    #Mac
     # options = Options()
     # options.add_argument('-headless')
     # opts = webdriver.ChromeOptions()
@@ -52,7 +52,7 @@ def prepare_driver(url):
     # driver = webdriver.Chrome('/Users/chandansingh/Documents/travel/scrape/hostelworld_scrape/chromedriver', options=opts)
     # driver.get(url)
 
-    # Linux
+    #Linux
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
@@ -104,7 +104,7 @@ def get_accommodations_list(driver,url,city, country):
     if driver is None:
         driver = prepare_driver()
     driver.get(url)
-    time.sleep(5)
+    time.sleep(3)
 
     email_text = {}
     look_for_next_page = True
@@ -228,11 +228,12 @@ def scrape_listing_detail(driver,listing_url,city,country):
         description = ""
 
     try:
-        image_urls_class = driver.find_elements_by_class_name("gallery")
+        image_urls_class = driver.find_element_by_name("ms-gallery").find_element_by_class_name("row").find_element_by_class_name("small-12").find_element_by_class_name("gallery")
         image_urls = []
-        for image in image_urls_class:
-            img = image.find_element_by_class_name("gallery-item").get_attribute("src")
+        for image in image_urls_class.find_elements_by_class_name("gallery-item"):
+            img = image.find_element_by_tag_name("img").get_attribute("src")
             image_urls.append(img)
+        print(len(image_urls), "Image urls")
     except:
         print("Image urls is None.")
         image_urls = []
