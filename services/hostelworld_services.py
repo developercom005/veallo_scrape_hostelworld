@@ -166,8 +166,8 @@ def get_accommodations_list(driver,url,city, country):
         listing_urls = list()
 
         if look_for_next_page:
+            next_page_url = construct_url(city=city, country=country, page=2)
             if driver == None:
-                next_page_url = construct_url(city=city,country=country,page=2)
                 driver = prepare_driver(next_page_url)
             driver.get(next_page_url)
             time.sleep(8)
