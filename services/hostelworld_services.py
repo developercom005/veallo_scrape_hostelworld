@@ -33,7 +33,7 @@ def send_email(email_text,to):
             msg["To"] = to[0]
         else:
             msg["To"] = ", ".join(to)
-        msg["Subject"] = "Booking.com Scrape"
+        msg["Subject"] = "Hostelworld.com Scrape"
         msg.attach(MIMEText(email_text, 'plain'))
         text = msg.as_string()
         server.sendmail(gmail_user, to, text)
@@ -45,21 +45,21 @@ def send_email(email_text,to):
 def prepare_driver(url):
 
     #Mac
-    # options = Options()
-    # options.add_argument('-headless')
-    # opts = webdriver.ChromeOptions()
-    # opts.headless = True
-    # driver = webdriver.Chrome('/Users/chandansingh/Documents/travel/scrape/hostelworld_scrape/chromedriver', options=opts)
-    # driver.get(url)
+    options = Options()
+    options.add_argument('-headless')
+    opts = webdriver.ChromeOptions()
+    opts.headless = True
+    driver = webdriver.Chrome('/Users/chandansingh/Documents/travel/scrape/hostelworld_scrape/chromedriver', options=opts)
+    driver.get(url)
 
     #Linux
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--no-sandbox')
+    # chrome_options = webdriver.ChromeOptions()
+    # chrome_options.add_argument('--headless')
+    # chrome_options.add_argument('--no-sandbox')
+    # driver = webdriver.Chrome(options=chrome_options)
     # chrome_options.add_argument('--disable-dev-shm-usage')
     # chrome_options.add_argument('--disable-gpu')
-    driver = webdriver.Chrome(options=chrome_options)
-    driver.get(url)
+    # driver.get(url)
 
     # wait = WebDriverWait(driver, 15).until(EC.presence_of_all_elements_located((By.ID, 'hwta-continent-3')))
     return driver
@@ -314,6 +314,7 @@ def scrape(domain):
             country_name = country["name"]
             print("Scraping for ", country_name)
             c_sets = get_cities_from_url(driver=driver, country=country_name)
+            print(len(c_sets))
             for city in c_sets:
                 print("Scraping for ", city)
                 main_list_url = "https://www.hostelworld.com/findabed.php/ChosenCity." + city + "/ChosenCountry." + country_name
@@ -321,7 +322,7 @@ def scrape(domain):
                                                          country=country_name)
                 email_text = "The scrape for " + total_inserted["city"] + ", " + total_inserted[
                     "country"] + " has ended gracefully and " + str(
-                    total_inserted["total_inserted"]) + " inserted in database."
+                    total_inserted["total_inserted"]) + " inserted in database for hostelworld."
                 to_addrs = ["phoenix.com005@gmail.com"]
                 send_email(email_text=email_text, to=to_addrs)
         driver.quit()
@@ -329,5 +330,5 @@ def scrape(domain):
         print(e)
         print("Exception while scraping")
         to_addrs = ["phoenix.com005@gmail.com"]
-        send_email(email_text=str(e), to=to_addrs)
+        send_email(email_text=str(e) + " in hostel world", to=to_addrs)
 
