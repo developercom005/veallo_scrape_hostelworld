@@ -45,21 +45,21 @@ def send_email(email_text,to):
 def prepare_driver(url):
 
     #Mac
-    options = Options()
-    options.add_argument('-headless')
-    opts = webdriver.ChromeOptions()
-    opts.headless = True
-    driver = webdriver.Chrome('/Users/chandansingh/Documents/travel/scrape/hostelworld_scrape/chromedriver', options=opts)
-    driver.get(url)
+    # options = Options()
+    # options.add_argument('-headless')
+    # opts = webdriver.ChromeOptions()
+    # opts.headless = True
+    # driver = webdriver.Chrome('/Users/chandansingh/Documents/travel/scrape/hostelworld_scrape/chromedriver', options=opts)
+    # driver.get(url)
 
     #Linux
-    # chrome_options = webdriver.ChromeOptions()
-    # chrome_options.add_argument('--headless')
-    # chrome_options.add_argument('--no-sandbox')
-    # driver = webdriver.Chrome(options=chrome_options)
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    driver = webdriver.Chrome(options=chrome_options)
     # chrome_options.add_argument('--disable-dev-shm-usage')
     # chrome_options.add_argument('--disable-gpu')
-    # driver.get(url)
+    driver.get(url)
 
     # wait = WebDriverWait(driver, 15).until(EC.presence_of_all_elements_located((By.ID, 'hwta-continent-3')))
     return driver
