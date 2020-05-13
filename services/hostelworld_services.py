@@ -13,6 +13,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import geocoder
+import re
 
 
 # db_service = MongoDBService(url = ['127.0.0.1:27017'])
@@ -104,7 +105,7 @@ def get_accommodations_list(driver,url,city, country):
     if driver is None:
         driver = prepare_driver()
     driver.get(url)
-    time.sleep(3)
+    time.sleep(5)
 
     email_text = {}
     look_for_next_page = True
@@ -113,7 +114,8 @@ def get_accommodations_list(driver,url,city, country):
     page_count = 1
     total_inserted = 0
 
-    total_listing = driver.find_element_by_xpath("//*[@id='pagebody']/div[1]/div[1]/div[2]/div[12]/div[9]/div/div[1]/p/span[1]/span").text
+    total_listing = driver.find_element_by_class_name("fabfooter").find_element_by_class_name("display-for-dynamic").text
+    # "//*[@id="pagebody"]/div[1]/div[1]/div[2]/div[12]/div[9]/div/div[1]/p/span[1]/span"
     #total_listing = driver.find_element_by_css_selector("#pagebody > div.off-canvas-wrap > div.inner-wrap > div.page-contents.frcx > div.contentbackground > div.row.fabfooter > div > div.small-12.columns > p > span.display-for-dynamic > span").text
     print(total_listing, "here")
     total_listing = [int(s) for s in total_listing.split() if s.isdigit()]
@@ -246,7 +248,7 @@ def scrape_listing_detail(driver,listing_url,city,country):
 
         for review in reviews_li:
             r = review.find_element_by_class_name("property-review").find_element_by_class_name("review-info")
-            r_country = r.find_element_by_tag_name('span').text.strip()
+            r_country = r.find_element_by_class_name('details-bottom').text.strip()
             r_text = r.find_element_by_class_name("notes").find_element_by_class_name("truncate-container").find_element_by_class_name("text").text.strip()
             rev = Review(text=r_text, review_country=r_country)
             reviews.append(rev.__dict__)
@@ -260,8 +262,8 @@ def scrape_listing_detail(driver,listing_url,city,country):
         reviews_breakdown_ul = reviews_class.find_element_by_tag_name("ul")
         reviews_breakdown_li = reviews_breakdown_ul.find_elements_by_tag_name("li")
         for breakdown in reviews_breakdown_li:
-            b_text = breakdown.find_element_by_tag_name('p').text.strip()
-            b_value = breakdown.find_element_by_tag_name('strong').text.strip()
+            b_text = breakdown.find_element_by_class_name('rating-label').text.strip()
+            b_value = breakdown.find_element_by_class_name('rating-label').find_element_by_class_name('pull-right').text.strip()
             try:
                 b_value = int(b_value)
             except:
@@ -288,7 +290,7 @@ def scrape_listing_detail(driver,listing_url,city,country):
 
 
     print(address)
-    g = geocoder.geonames(city, key='developer005')
+    g = geocoder.geonames(city+", " + country, key='developer005')
     if g.ok is True:
         latitude = g.lat
         longitude = g.lng
