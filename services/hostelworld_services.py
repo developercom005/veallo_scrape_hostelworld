@@ -14,6 +14,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import geocoder
 import re
+from datetime import datetime
 
 
 # db_service = MongoDBService(url = ['127.0.0.1:27017'])
@@ -88,6 +89,14 @@ def get_cities_from_url(driver,country):
     list_locations = other_locations_ul.find_elements_by_tag_name("li")
     for l in list_locations:
         c_sets.add(l.text)
+        city_data = {
+            "city": l.text,
+            "country": country,
+            "country_url": url,
+            "created_date": datetime.utcnow(),
+            "modified_date": datetime.utcnow()
+        }
+        db_service.insert_cities(data=city_data)
 
     return c_sets
 
@@ -115,7 +124,6 @@ def get_accommodations_list(driver,url,city, country):
     total_inserted = 0
 
     total_listing = driver.find_element_by_class_name("fabfooter").find_element_by_class_name("display-for-dynamic").text
-    # "//*[@id="pagebody"]/div[1]/div[1]/div[2]/div[12]/div[9]/div/div[1]/p/span[1]/span"
     #total_listing = driver.find_element_by_css_selector("#pagebody > div.off-canvas-wrap > div.inner-wrap > div.page-contents.frcx > div.contentbackground > div.row.fabfooter > div > div.small-12.columns > p > span.display-for-dynamic > span").text
     print(total_listing, "here")
     total_listing = [int(s) for s in total_listing.split() if s.isdigit()]
@@ -127,11 +135,18 @@ def get_accommodations_list(driver,url,city, country):
     while look_for_next_page:
         print("total listing for " + city + ", ", total_listing)
 
-        # class_locations = driver.find_element_by_class_name("otherlocations")
-        # other_locations_ul = class_locations.find_element_by_tag_name("ul")
-        # list_locations = other_locations_ul.find_elements_by_tag_name("li")
-        # for l in list_locations:
-        #     c_sets.add(l.text)
+        class_locations = driver.find_element_by_class_name("otherlocations")
+        other_locations_ul = class_locations.find_element_by_tag_name("ul")
+        list_locations = other_locations_ul.find_elements_by_tag_name("li")
+        for l in list_locations:
+            city_data = {
+                "city": l.text,
+                "country": country,
+                "country_url": url,
+                "created_date": datetime.utcnow(),
+                "modified_date": datetime.utcnow()
+            }
+            db_service.insert_cities(data=city_data)
 
         if i == total_listing:
             print()
@@ -316,8 +331,10 @@ def scrape(domain):
             country_name = country["name"]
             print("Scraping for ", country_name)
             c_sets = get_cities_from_url(driver=driver, country=country_name)
-            print(len(c_sets))
-            for city in c_sets:
+            distinct_cities = db_service.get_accommodation_by_distinct_fields()
+            distinct_cities = set(distinct_cities)
+            cities_to_scrape = c_sets.difference(distinct_cities)
+            for city in cities_to_scrape:
                 print("Scraping for ", city)
                 main_list_url = "https://www.hostelworld.com/findabed.php/ChosenCity." + city + "/ChosenCountry." + country_name
                 total_inserted = get_accommodations_list(driver=driver, url=main_list_url, city=city,

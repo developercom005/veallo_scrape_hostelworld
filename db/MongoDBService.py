@@ -33,9 +33,9 @@ class MongoDBService:
                     print("MongoDB Connection closed")
 
 
-    def bulk_insert_cities(self, data):
+    def insert_cities(self, data):
         db_veallo = self.client["veallo"]
-        collection_cities = db_veallo["cities"]
+        collection_cities = db_veallo["hostelworld_cities"]
         try:
             collection_cities.insert_one(data)
             print("City Data inserted in db")
@@ -70,13 +70,19 @@ class MongoDBService:
             pass
         return status
 
-    def get_accommodation_by_distinct_fields(self,query):
+    def get_accommodation_by_distinct_fields(self):
         db_veallo = self.client["veallo"]
         collection_cities = db_veallo["accommodation"]
         cities = []
         try:
-            for c in collection_cities.distinct(query):
-                cities.append(c)
+            for c in collection_cities.aggregate([
+                {"$match": {"website": "https://www.hostelworld.com/"}},
+                {"$group": {
+                "_id": None,
+                "city": {"$addToSet": '$city'}
+                }}
+            ]):
+                cities = c["city"]
         except pymongo.errors.DuplicateKeyError as de:
             print(de.details)
             print("Duplicate found while getting cities data in db.")
