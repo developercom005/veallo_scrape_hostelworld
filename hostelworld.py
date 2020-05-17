@@ -45,7 +45,13 @@ def get_domain_names():
 
 
 if __name__ == '__main__':
-    for d in get_domain_names():
-        hostelworld_services.scrape(domain=d)
-    send_email(email_text="Scrape Job Finished", to=["phoenix.com005@gmail.com"])
+    try:
+        for d in get_domain_names():
+            hostelworld_services.scrape(domain=d)
+        send_email(email_text="Scrape Job Finished", to=["phoenix.com005@gmail.com"])
+    except Exception as e:
+        print(e)
+        print("Exception while scraping")
+        to_addrs = ["phoenix.com005@gmail.com"]
+        send_email(email_text=str(e) + " in hostel world", to=to_addrs)
 
