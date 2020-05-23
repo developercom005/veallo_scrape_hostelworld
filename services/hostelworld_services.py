@@ -1,24 +1,15 @@
 import time
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
 from models.Accommodation import Accommodation
 from db.MongoDBService import MongoDBService
 from models.Review import Review
 from models.ReviewBreakdown import ReviewBreakdown
-from multiprocessing import Pool, cpu_count
-import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import geocoder
-import re
+import smtplib
 from datetime import datetime
 
-
-# db_service = MongoDBService(url = ['127.0.0.1:27017'])
-# cities_set = set()
 db_service = MongoDBService(url = ['mongodb://chandan005:pumpkiN009!@43.240.42.5:1025'])
 
 def send_email(email_text,to):
@@ -44,29 +35,32 @@ def send_email(email_text,to):
         print(e)
         print("Exception sending email")
 
-def prepare_driver(url):
+def prepare_driver():
 
     #Mac
-    # options = Options()
-    # options.add_argument('-headless')
     # opts = webdriver.ChromeOptions()
     # opts.headless = True
     # driver = webdriver.Chrome('/Users/chandansingh/Documents/travel/scrape/hostelworld_scrape/chromedriver', options=opts)
-    # driver.get(url)
 
     #Linux
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
     driver = webdriver.Chrome(options=chrome_options)
-    # chrome_options.add_argument('--disable-dev-shm-usage')
-    # chrome_options.add_argument('--disable-gpu')
-    driver.get(url)
 
-    # wait = WebDriverWait(driver, 15).until(EC.presence_of_all_elements_located((By.ID, 'hwta-continent-3')))
     return driver
 
-def get_countries_of_continent(driver,continent_name):
+def get_countries_of_continent(driver,continent_name,domain):
+    if driver is None:
+        driver = prepare_driver()
+    driver.get(domain)
+    time.sleep(3)
+    all_continents = driver.find_elements_by_class_name("accordion-navigation")
+    for a_c in all_continents:
+        try:
+            a_c.find_element_by_class_name("fa-plus-circle").click()
+        except:
+            a_c.find_element_by_class_name("fa-minus-circle").click()
     countries_ul = driver.find_element_by_xpath("//*[@id='"+continent_name+"']/ul")
     countries_list = countries_ul.find_elements_by_tag_name("li")
     countries_dict_list = []
@@ -77,44 +71,66 @@ def get_countries_of_continent(driver,continent_name):
         countries_dict_list.append(country_dict)
     return countries_dict_list
 
-def get_cities_from_url(driver,country):
+def get_cities_from_url(driver,country,country_url):
     c_sets = set()
     if driver is None:
         driver = prepare_driver()
-    url = "https://www.hostelworld.com/hostels/"+country
-    driver.get(url)
     time.sleep(3)
     class_locations = driver.find_element_by_class_name("otherlocations")
     other_locations_ul = class_locations.find_element_by_tag_name("ul")
     list_locations = other_locations_ul.find_elements_by_tag_name("li")
     for l in list_locations:
         c_sets.add(l.text)
-        city_data = {
-            "city": l.text,
-            "country": country,
-            "country_url": url,
-            "created_date": datetime.utcnow(),
-            "modified_date": datetime.utcnow()
-        }
-        db_service.insert_cities(data=city_data)
-
     return c_sets
-
-    # other_locations_ul = driver.find_element_by_xpath("//*[@id='pagebody']/div[1]/div[1]/div[2]/div[10]/div[4]/div/div[3]/ul")
-    # other_locations_list = other_locations_ul.find_elements_by_tag_name("li")
-    # other_locations_set = set()
-    # for ol in other_locations_list:
-    #     other_locations_set.add(ol.text)
 
 def construct_url(city,country,page):
     url = "https://www.hostelworld.com/findabed.php/ChosenCity."+city+"/ChosenCountry."+country+"?page="+str(page)
     return url
 
-def get_accommodations_list(driver,url,city, country):
+def scrape_all_cities():
+    driver = prepare_driver()
+    continents = ["asia", "north_america", "south_america", "oceania", "africa"]
+
+    for cont in continents:
+        print(cont)
+        domain = 'https://www.hostelworld.com/hostels#' + cont
+        print(domain)
+        country_dict_list = get_countries_of_continent(driver=driver,continent_name=cont,domain=domain)
+        country_set = set()
+        for c_d in country_dict_list:
+            print(c_d["name"])
+            country_set.add(c_d["name"])
+        db_countries = set(db_service.get_country_by_distinct_fields())
+        country_set = country_set.difference(db_countries)
+
+        for country in country_set:
+            country_name = country
+            print("Scraping for ", country_name)
+            country_url = "https://www.hostelworld.com/hostels/" + country_name
+            driver.get(country_url)
+            c_sets = get_cities_from_url(driver=driver, country=country_name, country_url=country_url)
+            cities_list = list()
+            for city in c_sets:
+                country_url = "https://www.hostelworld.com/hostels/" + country_name
+                city_url = "https://www.hostelworld.com/findabed.php/ChosenCity." + city + "/ChosenCountry." + country_name
+                city_data = {
+                    "city": city,
+                    "country": country_name,
+                    "country_url": country_url,
+                    "created_date": datetime.utcnow(),
+                    "modified_date": datetime.utcnow(),
+                    "city_url": city_url,
+                    "scrapped": False,
+                    "count": 0
+                }
+                cities_list.append(city_data)
+            db_service.insert_cities(data=cities_list)
+
+def get_accommodations_list(driver,url,city,country):
     if driver is None:
         driver = prepare_driver()
     driver.get(url)
-    time.sleep(5)
+    time.sleep(3)
 
     email_text = {}
     look_for_next_page = True
@@ -124,7 +140,6 @@ def get_accommodations_list(driver,url,city, country):
     total_inserted = 0
 
     total_listing = driver.find_element_by_class_name("fabfooter").find_element_by_class_name("display-for-dynamic").text
-    #total_listing = driver.find_element_by_css_selector("#pagebody > div.off-canvas-wrap > div.inner-wrap > div.page-contents.frcx > div.contentbackground > div.row.fabfooter > div > div.small-12.columns > p > span.display-for-dynamic > span").text
     print(total_listing, "here")
     total_listing = [int(s) for s in total_listing.split() if s.isdigit()]
 
@@ -134,19 +149,6 @@ def get_accommodations_list(driver,url,city, country):
 
     while look_for_next_page:
         print("total listing for " + city + ", ", total_listing)
-
-        class_locations = driver.find_element_by_class_name("otherlocations")
-        other_locations_ul = class_locations.find_element_by_tag_name("ul")
-        list_locations = other_locations_ul.find_elements_by_tag_name("li")
-        for l in list_locations:
-            city_data = {
-                "city": l.text,
-                "country": country,
-                "country_url": url,
-                "created_date": datetime.utcnow(),
-                "modified_date": datetime.utcnow()
-            }
-            db_service.insert_cities(data=city_data)
 
         if i == total_listing:
             print()
@@ -185,20 +187,19 @@ def get_accommodations_list(driver,url,city, country):
         if look_for_next_page:
             next_page_url = construct_url(city=city, country=country, page=2)
             if driver == None:
-                driver = prepare_driver(next_page_url)
+                driver = prepare_driver()
             driver.get(next_page_url)
             time.sleep(8)
 
     email_text["city"] = city
     email_text["country"] = country
     email_text["total_inserted"] = total_inserted
-    # email_text["cities"] = list(c_sets)
 
     return email_text
 
 def scrape_listing_detail(driver,listing_url,city,country):
     if driver is None:
-        driver = prepare_driver(listing_url)
+        driver = prepare_driver()
     driver.get(listing_url)
     time.sleep(3)
 
@@ -303,8 +304,6 @@ def scrape_listing_detail(driver,listing_url,city,country):
         print("Facilities is None.")
         facilities = []
 
-
-    print(address)
     g = geocoder.geonames(city+", " + country, key='developer005')
     if g.ok is True:
         latitude = g.lat
@@ -323,31 +322,23 @@ def scrape_listing_detail(driver,listing_url,city,country):
 
     return acc
 
-def scrape(domain):
+def scrape():
     try:
-        driver = prepare_driver(domain)
-        country_dict_list = get_countries_of_continent(driver, 'europe')
-        for country in country_dict_list:
-            country_name = country["name"]
-            print("Scraping for ", country_name)
-            c_sets = get_cities_from_url(driver=driver, country=country_name)
-            distinct_cities = db_service.get_accommodation_by_distinct_fields()
-            distinct_cities = set(distinct_cities)
-            cities_to_scrape = c_sets.difference(distinct_cities)
-            for city in cities_to_scrape:
-                print("Scraping for ", city)
-                main_list_url = "https://www.hostelworld.com/findabed.php/ChosenCity." + city + "/ChosenCountry." + country_name
-                total_inserted = get_accommodations_list(driver=driver, url=main_list_url, city=city,
-                                                         country=country_name)
-                email_text = "The scrape for " + total_inserted["city"] + ", " + total_inserted[
-                    "country"] + " has ended gracefully and " + str(
-                    total_inserted["total_inserted"]) + " inserted in database for hostelworld."
-                to_addrs = ["phoenix.com005@gmail.com"]
-                send_email(email_text=email_text, to=to_addrs)
+        driver = prepare_driver()
+        cities = db_service.get_city_left_to_scrape()
+        for c in cities:
+            print("Scraping for ", c["city"])
+            total_inserted_dict = get_accommodations_list(driver=driver, url=c["city_url"], city=c["city"],country=c["country"])
+
+            db_service.update_cities(city=c["city"], country=c["country"], scrapped_value=True,count=total_inserted_dict["total_inserted"])
+
+            email_text = "The scrape for " + total_inserted_dict["city"] + ", " + total_inserted_dict["country"] + " has ended gracefully and " + str(total_inserted_dict["total_inserted"]) + " inserted in database for hostelworld."
+            to_addrs = ["phoenix.com005@gmail.com"]
+            send_email(email_text=email_text, to=to_addrs)
+
         driver.quit()
     except Exception as e:
-        print(e)
-        print("Exception while scraping")
         to_addrs = ["phoenix.com005@gmail.com"]
         send_email(email_text=str(e) + " in hostel world", to=to_addrs)
+
 

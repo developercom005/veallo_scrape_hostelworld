@@ -1,12 +1,7 @@
 from services import hostelworld_services
-from db.MongoDBService import MongoDBService
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import time
-
-db_service = MongoDBService(url = ['mongodb://chandan005:pumpkiN009!@43.240.42.5:1025'])
-
-# db_service = MongoDBService(url = ['127.0.0.1:27017'])
+import smtplib
 
 def send_email(email_text,to):
     try:
@@ -46,8 +41,7 @@ def get_domain_names():
 
 if __name__ == '__main__':
     try:
-        for d in get_domain_names():
-            hostelworld_services.scrape(domain=d)
+        hostelworld_services.scrape()
         send_email(email_text="Scrape Job Finished", to=["phoenix.com005@gmail.com"])
     except Exception as e:
         print(e)

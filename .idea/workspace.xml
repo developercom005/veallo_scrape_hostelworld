@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="1556b3f2-1c9c-4750-a057-e5a2f11d4581" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/MongoDBService.py" beforeDir="false" afterPath="$PROJECT_DIR$/db/MongoDBService.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hostelworld.py" beforeDir="false" afterPath="$PROJECT_DIR$/hostelworld.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/hostelworld_services.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/hostelworld_services.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -13,13 +15,18 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/services/hostelworld_services.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="484">
-              <caret line="348" selection-start-line="348" selection-end-line="351" selection-end-column="71" />
+            <state relative-caret-position="221">
+              <caret line="40" selection-start-line="40" selection-end-line="42" selection-end-column="124" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
+                <element signature="e#2370#3200#0" />
+                <element signature="e#3259#3640#0" />
+                <element signature="e#3685#3810#0" />
+                <element signature="e#3552#5277#0" />
+                <element signature="e#7350#12834#0" />
               </folding>
             </state>
           </provider>
@@ -70,14 +77,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hostelworld.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="619">
-              <caret line="55" column="71" selection-start-line="55" selection-start-column="71" selection-end-line="55" selection-end-column="71" />
-              <folding>
-                <element signature="e#0#41#0" expanded="true" />
-              </folding>
+            <state>
+              <caret column="41" selection-start-column="41" selection-end-column="41" />
             </state>
           </provider>
         </entry>
@@ -85,8 +89,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db/MongoDBService.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1005">
-              <caret line="71" selection-start-line="71" selection-end-line="71" />
+            <state relative-caret-position="102">
+              <caret line="121" column="31" selection-start-line="121" selection-start-column="8" selection-end-line="121" selection-end-column="31" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -101,6 +105,7 @@
       <find>cities_set</find>
       <find>db</find>
       <find>next_page_url</find>
+      <find>prepare_driver</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -116,8 +121,8 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/bak" />
         <option value="$PROJECT_DIR$/db/MongoDBService.py" />
-        <option value="$PROJECT_DIR$/services/hostelworld_services.py" />
         <option value="$PROJECT_DIR$/hostelworld.py" />
+        <option value="$PROJECT_DIR$/services/hostelworld_services.py" />
       </list>
     </option>
   </component>
@@ -128,8 +133,8 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="20" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="49" />
     <option name="y" value="23" />
     <option name="width" value="1440" />
     <option name="height" value="788" />
@@ -152,11 +157,6 @@
               <item name="hostelworld_scrape" type="b2602c69:ProjectViewProjectNode" />
               <item name="hostelworld_scrape" type="462c0819:PsiDirectoryNode" />
               <item name="db" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="hostelworld_scrape" type="b2602c69:ProjectViewProjectNode" />
-              <item name="hostelworld_scrape" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="hostelworld_scrape" type="b2602c69:ProjectViewProjectNode" />
@@ -198,7 +198,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="20" y="23" width="1440" height="788" extended-state="0" />
+    <frame x="0" y="23" width="1440" height="788" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1952079" />
@@ -230,6 +230,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bak">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" selection-start-line="3" selection-end-line="3" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/models/ReviewBreakdown.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -253,37 +260,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/db/MongoDBService.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1005">
-          <caret line="71" selection-start-line="71" selection-end-line="71" />
+        <state relative-caret-position="102">
+          <caret line="121" column="31" selection-start-line="121" selection-start-column="8" selection-end-line="121" selection-end-column="31" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bak">
+    <entry file="file://$PROJECT_DIR$/hostelworld.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" selection-start-line="3" selection-end-line="3" selection-end-column="30" />
+        <state>
+          <caret column="41" selection-start-column="41" selection-end-column="41" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/services/hostelworld_services.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="348" selection-start-line="348" selection-end-line="351" selection-end-column="71" />
+        <state relative-caret-position="221">
+          <caret line="40" selection-start-line="40" selection-end-line="42" selection-end-column="124" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hostelworld.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="619">
-          <caret line="55" column="71" selection-start-line="55" selection-start-column="71" selection-end-line="55" selection-end-column="71" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
+            <element signature="e#2370#3200#0" />
+            <element signature="e#3259#3640#0" />
+            <element signature="e#3685#3810#0" />
+            <element signature="e#3552#5277#0" />
+            <element signature="e#7350#12834#0" />
           </folding>
         </state>
       </provider>
